@@ -3,7 +3,6 @@ package org.example;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 
@@ -18,6 +17,7 @@ class MainTest {
 
         AthleteEvents athlete1 = new AthleteEvents();
         athlete1.setName("John Doe");
+        athlete1.setSeason("Summer");
         athlete1.setYear("1980");
         athlete1.setMedal("Gold");
         athlete1.setAge("25");
@@ -26,6 +26,7 @@ class MainTest {
 
         AthleteEvents athlete2 = new AthleteEvents();
         athlete2.setName("Jane Smith");
+        athlete2.setSeason("Summer");
         athlete2.setYear("1980");
         athlete2.setMedal("Silver");
         athlete2.setAge("27");
@@ -50,25 +51,33 @@ class MainTest {
 
     @Test
     void testGetNumberOfGoldMedalWonByEachPlayer() {
-        // Since method prints output, we’ll assume success if no exceptions occur.
         assertDoesNotThrow(() -> Main.getNumberOfGoldMedalWonByEachPlayer(mockAthleteEvents),
                 "Should run without throwing exceptions.");
     }
 
     @Test
     void testGetNameOFGoldMedallistAgeBelow30() {
-        // Expected: John Doe (age 25)
-        Map<String, Integer> expected = new HashMap<>();
-        expected.put("John Doe", 25);
-
-        // Capture console output using a custom stream
         assertDoesNotThrow(() -> Main.getNameOFGoldMedallistAgeBelow30(mockAthleteEvents),
-                "Should execute without exceptions.");
+                "Should run without throwing exceptions.");
     }
 
     @Test
     void testEventWiseMedalCountFor1980() {
         assertDoesNotThrow(() -> Main.eventWiseMedalCountFor1980(mockAthleteEvents),
-                "Should run without exceptions.");
+                "Should run without throwing exceptions.");
+    }
+
+    @Test
+    void testGoldMedallistUnder30Exists() {
+        Main.getNameOFGoldMedallistAgeBelow30(mockAthleteEvents);
+        assertTrue(mockAthleteEvents.stream().anyMatch(a -> a.getName().equals("John Doe") && Integer.parseInt(a.getAge()) < 30),
+                "Should contain at least one gold medallist under 30.");
+    }
+
+    @Test
+    void testEventWiseMedalCount() {
+        Main.eventWiseMedalCountFor1980(mockAthleteEvents);
+        assertTrue(mockAthleteEvents.stream().anyMatch(a -> a.getEvent().equals("100m Sprint") && a.getMedal().equals("Gold")),
+                "Should contain 100m Sprint event with Gold medal.");
     }
 }
